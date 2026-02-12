@@ -16,7 +16,7 @@ class ScreenshotServiceProvider extends PackageServiceProvider
     {
         $package
             ->name('laravel-screenshot')
-            ->hasConfigFile();
+            ->hasConfigFile('laravel-screenshot');
     }
 
     public function packageRegistered(): void
