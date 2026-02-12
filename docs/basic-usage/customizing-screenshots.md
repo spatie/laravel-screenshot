@@ -25,22 +25,19 @@ Screenshot::url('https://example.com')
 
 ## Image format
 
-By default, screenshots are saved as PNG. You can change the format using `type()`:
+The image format is automatically determined from the file extension passed to `save()`. Supported formats:
+
+- `.png` — PNG format (default for unknown extensions)
+- `.jpg` / `.jpeg` — JPEG format
+- `.webp` — WebP format
 
 ```php
 use Spatie\LaravelScreenshot\Facades\Screenshot;
-use Spatie\LaravelScreenshot\Enums\ImageType;
 
-Screenshot::url('https://example.com')
-    ->type(ImageType::Jpeg)
-    ->save('screenshot.jpg');
+Screenshot::url('https://example.com')->save('screenshot.jpg'); // saves as JPEG
+Screenshot::url('https://example.com')->save('screenshot.webp'); // saves as WebP
+Screenshot::url('https://example.com')->save('screenshot.png'); // saves as PNG
 ```
-
-The available image types are:
-
-- `ImageType::Png` — PNG format (default)
-- `ImageType::Jpeg` — JPEG format
-- `ImageType::Webp` — WebP format
 
 ## Image quality
 
@@ -48,10 +45,8 @@ For JPEG and WebP formats, you can set the quality (0-100):
 
 ```php
 use Spatie\LaravelScreenshot\Facades\Screenshot;
-use Spatie\LaravelScreenshot\Enums\ImageType;
 
 Screenshot::url('https://example.com')
-    ->type(ImageType::Jpeg)
     ->quality(80)
     ->save('screenshot.jpg');
 ```

@@ -3,10 +3,7 @@
 
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
-use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\Facades\Screenshot;
-
-use function Spatie\LaravelScreenshot\Support\screenshot;
 
 beforeEach(function () {
     $this->targetPath = getTempPath('test.png');
@@ -26,18 +23,10 @@ it('can take a screenshot of html', function () {
     expect(mime_content_type($this->targetPath))->toBe('image/png');
 });
 
-it('can take a screenshot using the helper function', function () {
-    screenshot('https://example.com')->save($this->targetPath);
-
-    expect($this->targetPath)->toBeFile();
-    expect(mime_content_type($this->targetPath))->toBe('image/png');
-});
-
 it('can take a screenshot as jpeg', function () {
     $path = getTempPath('test.jpg');
 
     Screenshot::url('https://example.com')
-        ->type(ImageType::Jpeg)
         ->quality(80)
         ->save($path);
 

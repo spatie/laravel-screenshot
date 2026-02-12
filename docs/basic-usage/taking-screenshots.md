@@ -48,13 +48,3 @@ Screenshot::html($html)->save('screenshot.png');
 ```
 
 ... the text `hello` will be visible in the screenshot.
-
-## Using the helper function
-
-You can also use the `screenshot()` helper function:
-
-```php
-use function Spatie\LaravelScreenshot\Support\screenshot;
-
-screenshot('https://example.com')->save('screenshot.png');
-```

@@ -20,27 +20,11 @@ You can customize the viewport, format, and capture options:
 
 ```php
 use Spatie\LaravelScreenshot\Facades\Screenshot;
-use Spatie\LaravelScreenshot\Enums\ImageType;
 
 Screenshot::url('https://example.com')
     ->width(1920)->height(1080)
-    ->type(ImageType::Jpeg)->quality(80)
+    ->quality(80)
     ->save('screenshot.jpg');
-```
-
-You can also return the screenshot as a response from your controller:
-
-```php
-use Spatie\LaravelScreenshot\Facades\Screenshot;
-
-class ScreenshotController
-{
-    public function __invoke()
-    {
-        return Screenshot::url('https://example.com')
-            ->name('my-screenshot.png');
-    }
-}
 ```
 
 You can test your screenshots too:
@@ -53,7 +37,7 @@ it('can take a screenshot', function () {
 
     $this->get(route('screenshot'))->assertOk();
 
-    Screenshot::assertRespondedWithScreenshot(function ($screenshot) {
+    Screenshot::assertSaved(function ($screenshot) {
         return $screenshot->url === 'https://example.com';
     });
 });

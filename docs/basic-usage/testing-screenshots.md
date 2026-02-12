@@ -36,39 +36,6 @@ Screenshot::assertSaved(function ($screenshot, string $path) {
 });
 ```
 
-## assertRespondedWithScreenshot
-
-The `assertRespondedWithScreenshot` method can be used to assert that a screenshot was generated and returned as a response.
-
-Imagine you have this route:
-
-```php
-use Spatie\LaravelScreenshot\Facades\Screenshot;
-
-Route::get('take-screenshot', function () {
-    return Screenshot::url('https://example.com')
-        ->download('homepage.png');
-});
-```
-
-In your test for this route you can use `assertRespondedWithScreenshot` to make sure that a screenshot was generated and returned:
-
-```php
-use Spatie\LaravelScreenshot\Facades\Screenshot;
-
-it('can download a screenshot', function () {
-    Screenshot::fake();
-
-    $this
-        ->get('take-screenshot')
-        ->assertOk();
-
-    Screenshot::assertRespondedWithScreenshot(function ($screenshot) {
-        return $screenshot->url === 'https://example.com';
-    });
-});
-```
-
 ## assertUrlIs
 
 You can use the `assertUrlIs` method to assert that a screenshot was taken of a specific URL:

@@ -15,6 +15,13 @@ return [
     'job' => Spatie\LaravelScreenshot\Jobs\GenerateScreenshotJob::class,
 
     /*
+     * The action class used to determine the image type from a file path.
+     * The default implementation maps file extensions to ImageType enum values,
+     * falling back to PNG for unknown extensions.
+     */
+    'determine_image_type' => Spatie\LaravelScreenshot\Actions\DetermineImageType::class,
+
+    /*
      * Default screenshot options.
      * These are applied when a value isn't explicitly set on the builder.
      */
@@ -22,8 +29,13 @@ return [
         'width' => 1280,
         'height' => 800,
         'device_scale_factor' => 2,
-        'type' => 'png',
         'wait_until' => 'networkidle2',
+
+        /*
+         * The image type used when the file extension cannot be mapped to a
+         * supported format. Supported: "png", "jpeg", "webp"
+         */
+        'type' => 'png',
     ],
 
     /*

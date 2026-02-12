@@ -43,10 +43,7 @@
     "autoload": {
         "psr-4": {
             "Spatie\\LaravelScreenshot\\": "src/"
-        },
-        "files": [
-            "src/Support/functions.php"
-        ]
+        }
     },
     "autoload-dev": {
         "psr-4": {

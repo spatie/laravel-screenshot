@@ -1,7 +1,6 @@
 <?php
 
 
-use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\ScreenshotBuilder;
 
@@ -46,14 +45,6 @@ it('can set size', function () {
 
     expect($builder->width)->toBe(1920);
     expect($builder->height)->toBe(1080);
-});
-
-it('can set type', function () {
-    $builder = new ScreenshotBuilder;
-
-    $builder->type(ImageType::Jpeg);
-
-    expect($builder->type)->toBe(ImageType::Jpeg);
 });
 
 it('can set quality', function () {
@@ -135,7 +126,6 @@ it('supports fluent interface', function () {
         ->url('https://example.com')
         ->width(1920)
         ->height(1080)
-        ->type(ImageType::Png)
         ->quality(90)
         ->fullPage()
         ->selector('.main')
@@ -168,7 +158,6 @@ it('builds options with config defaults', function () {
         'width' => 1280,
         'height' => 800,
         'device_scale_factor' => 2,
-        'type' => 'png',
         'wait_until' => 'networkidle2',
     ]);
 
@@ -180,7 +169,6 @@ it('builds options with config defaults', function () {
     expect($options->width)->toBe(1280);
     expect($options->height)->toBe(800);
     expect($options->deviceScaleFactor)->toBe(2);
-    expect($options->type)->toBe(ImageType::Png);
     expect($options->waitUntil)->toBe('networkidle2');
 });
 

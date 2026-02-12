@@ -1,6 +1,5 @@
 <?php
 
-use Spatie\LaravelScreenshot\ScreenshotFactory;
 use Spatie\LaravelScreenshot\Tests\TestCase;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
 
@@ -9,8 +8,6 @@ uses(TestCase::class)
         (new TemporaryDirectory(getTempPath()))->delete();
     })
     ->beforeEach(function () {
-        ScreenshotFactory::resetDefaultBuilder();
-
         $this
             ->tempDir = (new TemporaryDirectory(getTestSupportPath()))
             ->name('temp')

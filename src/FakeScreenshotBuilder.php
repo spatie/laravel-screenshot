@@ -5,13 +5,9 @@ namespace Spatie\LaravelScreenshot;
 
 use Closure;
 use PHPUnit\Framework\Assert;
-use Spatie\LaravelScreenshot\Enums\ImageType;
-use Symfony\Component\HttpFoundation\Response;
 
 class FakeScreenshotBuilder extends ScreenshotBuilder
 {
-    protected bool $respondedWithScreenshot = false;
-
     /** @var array<int, array{builder: ScreenshotBuilder, path: string}> */
     protected array $savedScreenshots = [];
 
@@ -23,21 +19,6 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
         $this->savedScreenshots[] = ['builder' => clone $this, 'path' => $path];
 
         return $this;
-    }
-
-    public function toResponse($request): Response
-    {
-        $this->respondedWithScreenshot = true;
-
-        $imageType = $this->buildOptions()->type ?? ImageType::Png;
-
-        $disposition = $this->inline ? 'inline' : 'attachment';
-        $filename = $this->downloadName ?? "screenshot.{$imageType->value}";
-
-        return new Response('', 200, [
-            'Content-Type' => $imageType->contentType(),
-            'Content-Disposition' => "{$disposition}; filename=\"{$filename}\"",
-        ]);
     }
 
     public function saveQueued(
@@ -100,15 +81,6 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
         Assert::assertTrue($found, "No screenshot HTML contained [{$expectedHtml}].");
     }
 
-    public function assertRespondedWithScreenshot(?Closure $callback = null): void
-    {
-        Assert::assertTrue($this->respondedWithScreenshot, 'No screenshot was returned as a response.');
-
-        if ($callback) {
-            Assert::assertTrue($callback($this), 'The response screenshot did not match the given callback.');
-        }
-    }
-
     public function assertQueued(string|Closure|null $pathOrCallback = null): void
     {
         Assert::assertNotEmpty($this->queuedScreenshots, 'No screenshots were queued.');
@@ -163,10 +135,6 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
             array_column($this->savedScreenshots, 'builder'),
             array_column($this->queuedScreenshots, 'builder'),
         );
-
-        if ($this->respondedWithScreenshot) {
-            $allBuilders[] = $this;
-        }
 
         return $allBuilders;
     }

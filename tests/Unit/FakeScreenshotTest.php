@@ -1,6 +1,5 @@
 <?php
 
-use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\Facades\Screenshot;
 
 beforeEach(function () {
@@ -25,26 +24,13 @@ it('can assert html contains', function () {
     Screenshot::assertHtmlContains('Hello World');
 });
 
-it('can fake a screenshot returned as response', function () {
-    $response = Screenshot::url('https://example.com')
-        ->width(1920)
-        ->toResponse(request());
-
-    Screenshot::assertRespondedWithScreenshot(function ($screenshot) {
-        return $screenshot->url === 'https://example.com'
-            && $screenshot->width === 1920;
-    });
-});
-
 it('can assert saved with a callback', function () {
     Screenshot::url('https://example.com')
-        ->type(ImageType::Jpeg)
         ->quality(80)
         ->save('screenshots/page.jpg');
 
     Screenshot::assertSaved(function ($screenshot, $path) {
         return $path === 'screenshots/page.jpg'
-            && $screenshot->type === ImageType::Jpeg
             && $screenshot->quality === 80;
     });
 });
@@ -81,7 +67,6 @@ it('can use all builder methods', function () {
         ->width(1920)
         ->height(1080)
         ->size(1920, 1080)
-        ->type(ImageType::Png)
         ->quality(90)
         ->fullPage()
         ->selector('.main')
@@ -102,8 +87,3 @@ it('can assert url from a queued screenshot', function () {
     Screenshot::assertUrlIs('https://spatie.be');
 });
 
-it('can assert url from a response screenshot', function () {
-    Screenshot::url('https://spatie.be')->toResponse(request());
-
-    Screenshot::assertUrlIs('https://spatie.be');
-});

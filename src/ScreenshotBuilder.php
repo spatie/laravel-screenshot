@@ -4,20 +4,19 @@
 namespace Spatie\LaravelScreenshot;
 
 use Closure;
-use Illuminate\Contracts\Support\Responsable;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Traits\Conditionable;
 use Illuminate\Support\Traits\Dumpable;
 use Illuminate\Support\Traits\Macroable;
+use Spatie\LaravelScreenshot\Actions\DetermineImageType;
 use Spatie\LaravelScreenshot\Drivers\BrowsershotDriver;
 use Spatie\LaravelScreenshot\Drivers\ScreenshotDriver;
 use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\Exceptions\InvalidDriver;
 use Spatie\TemporaryDirectory\TemporaryDirectory;
-use Symfony\Component\HttpFoundation\Response;
 
-class ScreenshotBuilder implements Responsable
+class ScreenshotBuilder
 {
     use Conditionable;
     use Dumpable;
@@ -27,13 +26,9 @@ class ScreenshotBuilder implements Responsable
 
     public ?string $html = null;
 
-    public ?string $downloadName = null;
-
     public ?int $width = null;
 
     public ?int $height = null;
-
-    public ?ImageType $type = null;
 
     public ?int $quality = null;
 
@@ -63,7 +58,6 @@ class ScreenshotBuilder implements Responsable
 
     protected string $diskVisibility = 'private';
 
-    protected bool $inline = false;
 
     public function url(string $url): self
     {
@@ -97,13 +91,6 @@ class ScreenshotBuilder implements Responsable
     {
         $this->width = $width;
         $this->height = $height;
-
-        return $this;
-    }
-
-    public function type(ImageType $type): self
-    {
-        $this->type = $type;
 
         return $this;
     }
@@ -192,36 +179,7 @@ class ScreenshotBuilder implements Responsable
         return $this;
     }
 
-    public function inline(?string $name = null): self
-    {
-        $this->inline = true;
-
-        if ($name) {
-            $this->downloadName = $name;
-        }
-
-        return $this;
-    }
-
-    public function download(?string $name = null): self
-    {
-        $this->inline = false;
-
-        if ($name) {
-            $this->downloadName = $name;
-        }
-
-        return $this;
-    }
-
-    public function name(string $name): self
-    {
-        $this->downloadName = $name;
-
-        return $this;
-    }
-
-    public function disk(string $diskName, string $visibility = 'private'): self
+public function disk(string $diskName, string $visibility = 'private'): self
     {
         $this->diskName = $diskName;
         $this->diskVisibility = $visibility;
@@ -236,8 +194,10 @@ class ScreenshotBuilder implements Responsable
 
     public function save(string $path): self
     {
+        $type = $this->determineImageType($path);
+
         if ($this->diskName) {
-            $this->saveOnDisk($path);
+            $this->saveOnDisk($path, $type);
 
             return $this;
         }
@@ -245,7 +205,7 @@ class ScreenshotBuilder implements Responsable
         $this->getDriver()->saveScreenshot(
             $this->getInput(),
             $this->isHtml(),
-            $this->buildOptions(),
+            $this->buildOptions($type),
             $path,
         );
 
@@ -261,12 +221,14 @@ class ScreenshotBuilder implements Responsable
             throw CouldNotTakeScreenshot::cannotQueueWithBrowsershotClosure();
         }
 
+        $type = $this->determineImageType($path);
+
         $jobClass = config('laravel-screenshot.job');
 
         $job = new $jobClass(
             input: $this->getInput(),
             isHtml: $this->isHtml(),
-            options: $this->buildOptions(),
+            options: $this->buildOptions($type),
             path: $path,
             diskName: $this->diskName,
             visibility: $this->diskVisibility,
@@ -286,32 +248,14 @@ class ScreenshotBuilder implements Responsable
         return new QueuedScreenshotResponse($dispatch, $job);
     }
 
-    public function toResponse($request): Response
-    {
-        $content = $this->generateScreenshot();
-
-        $imageType = $this->buildOptions()->type ?? ImageType::Png;
-
-        $headers = [
-            'Content-Type' => $imageType->contentType(),
-            'Content-Length' => strlen($content),
-        ];
-
-        $disposition = $this->inline ? 'inline' : 'attachment';
-        $filename = $this->downloadName ?? "screenshot.{$imageType->value}";
-        $headers['Content-Disposition'] = "{$disposition}; filename=\"{$filename}\"";
-
-        return new Response($content, 200, $headers);
-    }
-
-    public function buildOptions(): ScreenshotOptions
+    public function buildOptions(?ImageType $type = null): ScreenshotOptions
     {
         $defaults = config('laravel-screenshot.defaults', []);
 
         return new ScreenshotOptions(
             width: $this->width ?? ($defaults['width'] ?? null),
             height: $this->height ?? ($defaults['height'] ?? null),
-            type: $this->type ?? (isset($defaults['type']) ? ImageType::from($defaults['type']) : null),
+            type: $type,
             quality: $this->quality,
             fullPage: $this->fullPage,
             selector: $this->selector,
@@ -333,7 +277,7 @@ class ScreenshotBuilder implements Responsable
         );
     }
 
-    protected function saveOnDisk(string $path): void
+    protected function saveOnDisk(string $path, ImageType $type): void
     {
         $fileName = pathinfo($path, PATHINFO_BASENAME);
 
@@ -342,7 +286,7 @@ class ScreenshotBuilder implements Responsable
         $this->getDriver()->saveScreenshot(
             $this->getInput(),
             $this->isHtml(),
-            $this->buildOptions(),
+            $this->buildOptions($type),
             $temporaryDirectory->path($fileName),
         );
 
@@ -351,6 +295,13 @@ class ScreenshotBuilder implements Responsable
         $temporaryDirectory->delete();
 
         Storage::disk($this->diskName)->put($path, $content, $this->diskVisibility);
+    }
+
+    protected function determineImageType(string $path): ImageType
+    {
+        $actionClass = config('laravel-screenshot.determine_image_type', DetermineImageType::class);
+
+        return app($actionClass)($path);
     }
 
     protected function getInput(): string
