@@ -1,10 +1,2 @@
 parameters:
-    ignoreErrors:
-        -
-            message: '#has invalid return type Spatie\\Browsershot\\Browsershot#'
-            identifier: class.notFound
-            path: src/Drivers/BrowsershotDriver.php
-        -
-            message: '#has invalid type Spatie\\Browsershot\\Browsershot#'
-            identifier: class.notFound
-            path: src/Drivers/BrowsershotDriver.php
+    ignoreErrors: []
