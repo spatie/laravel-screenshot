@@ -1,0 +1,6 @@
+providers:
+  - Spatie\LaravelScreenshot\ScreenshotServiceProvider
+
+workbench:
+  discovers:
+    web: true
