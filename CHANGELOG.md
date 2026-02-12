@@ -17,6 +17,6 @@ All notable changes to `laravel-screenshot` will be documented in this file.
 
 **Full Changelog**: https://github.com/spatie/laravel-screenshot/commits/0.0.1
 
-## 1.0.0 - 202X-XX-XX
+## 1.0.0 - 2026-02-12
 
 - initial release

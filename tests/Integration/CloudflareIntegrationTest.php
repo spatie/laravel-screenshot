@@ -27,7 +27,7 @@ it('can take a screenshot of a url via cloudflare', function () {
     $path = getTempPath('cloudflare-url.png');
 
     $this->driver->saveScreenshot(
-        'https://example.com',
+        'https://spatie.be',
         false,
         new ScreenshotOptions,
         $path,
