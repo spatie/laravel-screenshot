@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 use Spatie\LaravelScreenshot\Facades\Screenshot;
 use Spatie\LaravelScreenshot\ScreenshotFactory;

@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 use Dotenv\Dotenv;
 use Spatie\LaravelScreenshot\Drivers\CloudflareDriver;

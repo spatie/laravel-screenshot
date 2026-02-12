@@ -1,6 +1,5 @@
 <?php
 
-declare(strict_types=1);
 
 use Spatie\LaravelScreenshot\Drivers\BrowsershotDriver;
 use Spatie\LaravelScreenshot\Enums\ImageType;
