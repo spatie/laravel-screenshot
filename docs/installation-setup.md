@@ -43,6 +43,10 @@ CLOUDFLARE_ACCOUNT_ID=your-account-id
 
 That's it. No other dependencies are required since the Cloudflare driver uses Laravel's built-in HTTP client.
 
+## Laravel Boost
+
+This package ships with a [Laravel Boost](https://laravel.com/docs/12.x/boost) skill. After installing the package, run `php artisan boost:install` to register the skill. This will help AI agents in your project generate correct screenshot code.
+
 ## Publishing the config file
 
 Optionally, you can publish the config file with:
