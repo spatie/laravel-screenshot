@@ -57,7 +57,6 @@ class ScreenshotBuilder
 
     protected string $diskVisibility = 'private';
 
-
     public function url(string $url): self
     {
         $this->url = $url;
@@ -178,7 +177,7 @@ class ScreenshotBuilder
         return $this;
     }
 
-public function disk(string $diskName, string $visibility = 'private'): self
+    public function disk(string $diskName, string $visibility = 'private'): self
     {
         $this->diskName = $diskName;
         $this->diskVisibility = $visibility;

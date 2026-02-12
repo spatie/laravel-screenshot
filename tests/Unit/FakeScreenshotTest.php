@@ -86,4 +86,3 @@ it('can assert url from a queued screenshot', function () {
 
     Screenshot::assertUrlIs('https://spatie.be');
 });
-
