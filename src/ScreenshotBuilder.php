@@ -299,7 +299,7 @@ class ScreenshotBuilder implements Responsable
         ];
 
         $disposition = $this->inline ? 'inline' : 'attachment';
-        $filename = $this->downloadName ?? 'screenshot.'.$imageType->value;
+        $filename = $this->downloadName ?? "screenshot.{$imageType->value}";
         $headers['Content-Disposition'] = "{$disposition}; filename=\"{$filename}\"";
 
         return new Response($content, 200, $headers);
@@ -393,8 +393,10 @@ class ScreenshotBuilder implements Responsable
 
     protected function applyBrowsershotCallback(ScreenshotDriver $driver): ScreenshotDriver
     {
-        if ($this->withBrowsershotCallback && $driver instanceof BrowsershotDriver) {
-            $driver->customizeBrowsershot($this->withBrowsershotCallback);
+        if ($this->withBrowsershotCallback) {
+            if ($driver instanceof BrowsershotDriver) {
+                $driver->customizeBrowsershot($this->withBrowsershotCallback);
+            }
         }
 
         return $driver;

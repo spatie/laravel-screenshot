@@ -19,7 +19,11 @@ class CloudflareDriver implements ScreenshotDriver
         $this->apiToken = $config['api_token'] ?? '';
         $this->accountId = $config['account_id'] ?? '';
 
-        if (empty($this->apiToken) || empty($this->accountId)) {
+        if (empty($this->apiToken)) {
+            throw CouldNotTakeScreenshot::missingCloudflareCredentials();
+        }
+
+        if (empty($this->accountId)) {
             throw CouldNotTakeScreenshot::missingCloudflareCredentials();
         }
     }

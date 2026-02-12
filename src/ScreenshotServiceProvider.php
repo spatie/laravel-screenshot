@@ -21,17 +21,13 @@ class ScreenshotServiceProvider extends PackageServiceProvider
 
     public function packageRegistered(): void
     {
-        $this->app->singleton('laravel-screenshot.driver.browsershot', function ($app) {
-            return new BrowsershotDriver(
-                config('laravel-screenshot.browsershot', []),
-            );
-        });
+        $this->app->singleton('laravel-screenshot.driver.browsershot', fn () => new BrowsershotDriver(
+            config('laravel-screenshot.browsershot', []),
+        ));
 
-        $this->app->singleton('laravel-screenshot.driver.cloudflare', function ($app) {
-            return new CloudflareDriver(
-                config('laravel-screenshot.cloudflare', []),
-            );
-        });
+        $this->app->singleton('laravel-screenshot.driver.cloudflare', fn () => new CloudflareDriver(
+            config('laravel-screenshot.cloudflare', []),
+        ));
 
         $this->app->bind(ScreenshotDriver::class, function ($app) {
             $driver = config('laravel-screenshot.driver', 'browsershot');

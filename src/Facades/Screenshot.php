@@ -14,15 +14,13 @@ use Spatie\LaravelScreenshot\ScreenshotFactory;
  */
 class Screenshot extends Facade
 {
-    protected static function getFacadeAccessor()
+    protected static function getFacadeAccessor(): string
     {
         return ScreenshotFactory::class;
     }
 
-    public static function fake()
+    public static function fake(): void
     {
-        $fake = new FakeScreenshotBuilder;
-
-        static::swap($fake);
+        static::swap(new FakeScreenshotBuilder);
     }
 }

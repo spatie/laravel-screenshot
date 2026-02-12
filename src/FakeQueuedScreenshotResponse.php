@@ -8,10 +8,7 @@ use Closure;
 
 class FakeQueuedScreenshotResponse extends QueuedScreenshotResponse
 {
-    public function __construct()
-    {
-        // No-op: skip parent constructor since we don't need a real PendingDispatch
-    }
+    public function __construct() {}
 
     public function then(Closure $callback): static
     {

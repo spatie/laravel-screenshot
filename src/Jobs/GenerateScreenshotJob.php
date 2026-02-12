@@ -58,16 +58,9 @@ class GenerateScreenshotJob implements ShouldQueue
     {
         $driver = $this->resolveDriver();
 
-        if ($this->diskName) {
-            $this->saveOnDisk($driver);
-        } else {
-            $driver->saveScreenshot(
-                $this->input,
-                $this->isHtml,
-                $this->options,
-                $this->path,
-            );
-        }
+        $this->diskName
+            ? $this->saveOnDisk($driver)
+            : $driver->saveScreenshot($this->input, $this->isHtml, $this->options, $this->path);
 
         foreach ($this->thenCallbacks as $callback) {
             ($callback->getClosure())($this->path, $this->diskName);

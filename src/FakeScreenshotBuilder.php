@@ -6,6 +6,7 @@ namespace Spatie\LaravelScreenshot;
 
 use Closure;
 use PHPUnit\Framework\Assert;
+use Spatie\LaravelScreenshot\Enums\ImageType;
 use Symfony\Component\HttpFoundation\Response;
 
 class FakeScreenshotBuilder extends ScreenshotBuilder
@@ -29,17 +30,15 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
     {
         $this->respondedWithScreenshot = true;
 
-        $imageType = $this->buildOptions()->type ?? Enums\ImageType::Png;
-
-        $headers = [
-            'Content-Type' => $imageType->contentType(),
-        ];
+        $imageType = $this->buildOptions()->type ?? ImageType::Png;
 
         $disposition = $this->inline ? 'inline' : 'attachment';
-        $filename = $this->downloadName ?? 'screenshot.'.$imageType->value;
-        $headers['Content-Disposition'] = "{$disposition}; filename=\"{$filename}\"";
+        $filename = $this->downloadName ?? "screenshot.{$imageType->value}";
 
-        return new Response('', 200, $headers);
+        return new Response('', 200, [
+            'Content-Type' => $imageType->contentType(),
+            'Content-Disposition' => "{$disposition}; filename=\"{$filename}\"",
+        ]);
     }
 
     public function saveQueued(
@@ -61,66 +60,43 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
         }
 
         if ($pathOrCallback instanceof Closure) {
-            $found = false;
-            foreach ($this->savedScreenshots as $saved) {
-                if ($pathOrCallback($saved['builder'], $saved['path'])) {
-                    $found = true;
-                    break;
-                }
-            }
+            $found = collect($this->savedScreenshots)->contains(
+                fn (array $saved) => $pathOrCallback($saved['builder'], $saved['path']),
+            );
+
             Assert::assertTrue($found, 'No saved screenshot matched the given callback.');
 
             return;
         }
 
         $paths = array_column($this->savedScreenshots, 'path');
+
         Assert::assertContains($pathOrCallback, $paths, "No screenshot was saved to [{$pathOrCallback}].");
     }
 
     public function assertUrlIs(string $expectedUrl): void
     {
-        $allBuilders = array_merge(
-            array_column($this->savedScreenshots, 'builder'),
-            array_column($this->queuedScreenshots, 'builder'),
-        );
-
-        if ($this->respondedWithScreenshot) {
-            $allBuilders[] = $this;
-        }
+        $allBuilders = $this->getAllBuilders();
 
         Assert::assertNotEmpty($allBuilders, 'No screenshots were taken.');
 
-        $found = false;
-        foreach ($allBuilders as $builder) {
-            if ($builder->url === $expectedUrl) {
-                $found = true;
-                break;
-            }
-        }
+        $found = collect($allBuilders)->contains(
+            fn (ScreenshotBuilder $builder) => $builder->url === $expectedUrl,
+        );
 
         Assert::assertTrue($found, "No screenshot was taken of URL [{$expectedUrl}].");
     }
 
     public function assertHtmlContains(string $expectedHtml): void
     {
-        $allBuilders = array_merge(
-            array_column($this->savedScreenshots, 'builder'),
-            array_column($this->queuedScreenshots, 'builder'),
-        );
-
-        if ($this->respondedWithScreenshot) {
-            $allBuilders[] = $this;
-        }
+        $allBuilders = $this->getAllBuilders();
 
         Assert::assertNotEmpty($allBuilders, 'No screenshots were taken.');
 
-        $found = false;
-        foreach ($allBuilders as $builder) {
-            if ($builder->html !== null && str_contains($builder->html, $expectedHtml)) {
-                $found = true;
-                break;
-            }
-        }
+        $found = collect($allBuilders)->contains(
+            fn (ScreenshotBuilder $builder) => $builder->html !== null
+                && str_contains($builder->html, $expectedHtml),
+        );
 
         Assert::assertTrue($found, "No screenshot HTML contained [{$expectedHtml}].");
     }
@@ -143,19 +119,17 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
         }
 
         if ($pathOrCallback instanceof Closure) {
-            $found = false;
-            foreach ($this->queuedScreenshots as $queued) {
-                if ($pathOrCallback($queued['builder'], $queued['path'])) {
-                    $found = true;
-                    break;
-                }
-            }
+            $found = collect($this->queuedScreenshots)->contains(
+                fn (array $queued) => $pathOrCallback($queued['builder'], $queued['path']),
+            );
+
             Assert::assertTrue($found, 'No queued screenshot matched the given callback.');
 
             return;
         }
 
         $paths = array_column($this->queuedScreenshots, 'path');
+
         Assert::assertContains($pathOrCallback, $paths, "No screenshot was queued to [{$pathOrCallback}].");
     }
 
@@ -171,7 +145,7 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
             foreach ($this->queuedScreenshots as $queued) {
                 Assert::assertFalse(
                     $pathOrCallback($queued['builder'], $queued['path']),
-                    'A queued screenshot matched the given callback.'
+                    'A queued screenshot matched the given callback.',
                 );
             }
 
@@ -179,6 +153,22 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
         }
 
         $paths = array_column($this->queuedScreenshots, 'path');
+
         Assert::assertNotContains($pathOrCallback, $paths, "A screenshot was unexpectedly queued to [{$pathOrCallback}].");
+    }
+
+    /** @return array<int, ScreenshotBuilder> */
+    protected function getAllBuilders(): array
+    {
+        $allBuilders = array_merge(
+            array_column($this->savedScreenshots, 'builder'),
+            array_column($this->queuedScreenshots, 'builder'),
+        );
+
+        if ($this->respondedWithScreenshot) {
+            $allBuilders[] = $this;
+        }
+
+        return $allBuilders;
     }
 }
