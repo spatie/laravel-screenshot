@@ -31,9 +31,15 @@ class FakeScreenshotBuilder extends ScreenshotBuilder
 
         $imageType = $this->buildOptions()->type ?? Enums\ImageType::Png;
 
-        return new Response('', 200, [
+        $headers = [
             'Content-Type' => $imageType->contentType(),
-        ]);
+        ];
+
+        $disposition = $this->inline ? 'inline' : 'attachment';
+        $filename = $this->downloadName ?? 'screenshot.'.$imageType->value;
+        $headers['Content-Disposition'] = "{$disposition}; filename=\"{$filename}\"";
+
+        return new Response('', 200, $headers);
     }
 
     public function saveQueued(
