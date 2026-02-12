@@ -13,5 +13,5 @@ function screenshot(?string $url = null): ScreenshotBuilder
         return Screenshot::url($url);
     }
 
-    return Screenshot::url('');
+    return new ScreenshotBuilder;
 }
