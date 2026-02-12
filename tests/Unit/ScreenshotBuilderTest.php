@@ -1,6 +1,5 @@
 <?php
 
-
 use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\ScreenshotBuilder;

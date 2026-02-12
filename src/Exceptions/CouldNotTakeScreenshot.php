@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Spatie\LaravelScreenshot\Exceptions;
 
 use Exception;

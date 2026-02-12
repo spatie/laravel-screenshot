@@ -1,6 +1,5 @@
 <?php
 
-
 use Spatie\LaravelScreenshot\Drivers\BrowsershotDriver;
 use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\ScreenshotOptions;

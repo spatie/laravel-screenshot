@@ -1,6 +1,5 @@
 <?php
 
-
 use Spatie\LaravelScreenshot\Facades\Screenshot;
 
 it('can inline a screenshot', function () {

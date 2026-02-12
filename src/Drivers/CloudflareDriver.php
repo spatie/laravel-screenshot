@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Spatie\LaravelScreenshot\Drivers;
 
 use Illuminate\Support\Facades\Http;

@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Spatie\LaravelScreenshot\Support;
 
 use Spatie\LaravelScreenshot\Facades\Screenshot;

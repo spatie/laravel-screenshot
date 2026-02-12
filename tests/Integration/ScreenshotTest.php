@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelScreenshot\Enums\ImageType;
