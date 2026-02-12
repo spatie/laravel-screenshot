@@ -54,13 +54,9 @@ class CloudflareDriver implements ScreenshotDriver
 
     protected function buildRequestBody(string $input, bool $isHtml, ScreenshotOptions $options): array
     {
-        $body = [];
+        $key = $isHtml ? 'html' : 'url';
 
-        if ($isHtml) {
-            $body['html'] = $input;
-        } else {
-            $body['url'] = $input;
-        }
+        $body = [$key => $input];
 
         $screenshotOptions = [];
 
