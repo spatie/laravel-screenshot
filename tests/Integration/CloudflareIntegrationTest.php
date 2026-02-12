@@ -1,6 +1,5 @@
 <?php
 
-
 use Dotenv\Dotenv;
 use Spatie\LaravelScreenshot\Drivers\CloudflareDriver;
 use Spatie\LaravelScreenshot\ScreenshotOptions;

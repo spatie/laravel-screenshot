@@ -1,6 +1,5 @@
 <?php
 
-
 use Illuminate\Support\Facades\Bus;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\Facades\Screenshot;

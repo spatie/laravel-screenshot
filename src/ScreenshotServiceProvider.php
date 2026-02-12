@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Spatie\LaravelScreenshot;
 
 use Spatie\LaravelPackageTools\Package;

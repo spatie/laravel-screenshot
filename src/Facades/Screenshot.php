@@ -1,6 +1,5 @@
 <?php
 
-
 namespace Spatie\LaravelScreenshot\Facades;
 
 use Illuminate\Support\Facades\Facade;
