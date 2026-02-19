@@ -1,8 +1,18 @@
-<h1>Take screenshots of web pages in Laravel apps</h1>
+<div align="left">
+    <a href="https://spatie.be/open-source?utm_source=github&utm_medium=banner&utm_campaign=laravel-screenshot">
+      <picture>
+        <source media="(prefers-color-scheme: dark)" srcset="https://spatie.be/packages/header/laravel-screenshot/html/dark.webp?123">
+        <img alt="Logo for Laravel Screenshot" src="https://spatie.be/packages/header/laravel-screenshot/html/light.webp?123">
+      </picture>
+    </a>
 
+<h1>Take screenshots of web pages in Laravel apps</h1>
+    
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-screenshot.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-screenshot)
 [![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-screenshot/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/spatie/laravel-screenshot/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-screenshot.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-screenshot)
+    
+</div>
 
 This package provides a simple way to take screenshots of web pages in Laravel apps. It uses a driver-based architecture, so you can choose between [Browsershot](https://spatie.be/docs/browsershot) (Chromium) and [Cloudflare Browser Rendering](https://developers.cloudflare.com/browser-rendering/).
 
