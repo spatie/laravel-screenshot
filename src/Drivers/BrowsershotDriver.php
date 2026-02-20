@@ -84,7 +84,11 @@ class BrowsershotDriver implements ScreenshotDriver
         }
 
         if ($options->waitUntil !== null) {
-            $browsershot->waitUntilNetworkIdle($options->waitUntil === 'networkidle0');
+            $waitUntil = $options->waitUntil instanceof \Spatie\LaravelScreenshot\Enums\WaitUntil
+                ? $options->waitUntil->value
+                : $options->waitUntil;
+
+            $browsershot->waitUntilNetworkIdle($waitUntil === 'networkidle0');
         }
 
         if ($options->waitForSelector !== null) {

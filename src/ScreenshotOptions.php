@@ -3,6 +3,7 @@
 namespace Spatie\LaravelScreenshot;
 
 use Spatie\LaravelScreenshot\Enums\ImageType;
+use Spatie\LaravelScreenshot\Enums\WaitUntil;
 
 class ScreenshotOptions
 {
@@ -18,6 +19,6 @@ class ScreenshotOptions
         public ?bool $omitBackground = null,
         public ?int $waitForTimeout = null,
         public ?string $waitForSelector = null,
-        public ?string $waitUntil = null,
+        public WaitUntil|string|null $waitUntil = null,
     ) {}
 }

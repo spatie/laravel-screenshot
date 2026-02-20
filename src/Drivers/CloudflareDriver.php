@@ -108,7 +108,9 @@ class CloudflareDriver implements ScreenshotDriver
 
         if ($options->waitUntil !== null) {
             $body['gotoOptions'] = [
-                'waitUntil' => $options->waitUntil,
+                'waitUntil' => $options->waitUntil instanceof \Spatie\LaravelScreenshot\Enums\WaitUntil
+                    ? $options->waitUntil->value
+                    : $options->waitUntil,
             ];
         }
 

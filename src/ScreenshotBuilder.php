@@ -10,6 +10,7 @@ use Illuminate\Support\Traits\Macroable;
 use Spatie\LaravelScreenshot\Actions\DetermineImageType;
 use Spatie\LaravelScreenshot\Drivers\BrowsershotDriver;
 use Spatie\LaravelScreenshot\Drivers\ScreenshotDriver;
+use Spatie\LaravelScreenshot\Enums\WaitUntil;
 use Spatie\LaravelScreenshot\Enums\ImageType;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\Exceptions\InvalidDriver;
@@ -45,7 +46,7 @@ class ScreenshotBuilder
 
     public ?string $waitForSelector = null;
 
-    public ?string $waitUntil = null;
+    public WaitUntil|string|null $waitUntil = null;
 
     protected ?string $driverName = null;
 
@@ -149,7 +150,7 @@ class ScreenshotBuilder
         return $this;
     }
 
-    public function waitUntil(string $event): self
+    public function waitUntil(WaitUntil|string $event): self
     {
         $this->waitUntil = $event;
 
