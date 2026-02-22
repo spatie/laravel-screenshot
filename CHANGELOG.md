@@ -2,6 +2,12 @@
 
 All notable changes to `laravel-screenshot` will be documented in this file.
 
+## 1.1.1 - 2026-02-22
+
+### What's Changed
+
+- Lower PHP requirement to ^8.3
+
 ## 1.1.0 - 2026-02-20
 
 Add WaitUntil enum for type-safe wait-until options
