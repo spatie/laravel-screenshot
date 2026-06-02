@@ -9,7 +9,7 @@
 <h1>Take screenshots of web pages in Laravel apps</h1>
     
 [![Latest Version on Packagist](https://img.shields.io/packagist/v/spatie/laravel-screenshot.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-screenshot)
-[![GitHub Tests Action Status](https://img.shields.io/github/actions/workflow/status/spatie/laravel-screenshot/run-tests.yml?branch=main&label=tests&style=flat-square)](https://github.com/spatie/laravel-screenshot/actions?query=workflow%3Arun-tests+branch%3Amain)
+[![GitHub Tests Action Status](https://github.com/spatie/laravel-screenshot/actions/workflows/run-tests.yml/badge.svg)](https://github.com/spatie/laravel-screenshot/actions?query=workflow%3Arun-tests+branch%3Amain)
 [![Total Downloads](https://img.shields.io/packagist/dt/spatie/laravel-screenshot.svg?style=flat-square)](https://packagist.org/packages/spatie/laravel-screenshot)
     
 </div>
