@@ -3,14 +3,38 @@
 use Illuminate\Support\Facades\Storage;
 use Spatie\Browsershot\Browsershot;
 use Spatie\LaravelScreenshot\Facades\Screenshot;
+use Symfony\Component\Process\Process;
 
-beforeEach(function () {
+$server = new Process([PHP_BINARY, '-S', '127.0.0.1:0', '-t', __DIR__.'/../TestSupport/website']);
+$url = '';
+
+beforeAll(function () use ($server, &$url) {
+    $server->start();
+    $server->waitUntil(function ($type, $output) use (&$url) {
+        if (! preg_match('~Development Server \((http://127\.0\.0\.1:\d+)\) started~', $output, $matches)) {
+            return false;
+        }
+
+        $url = $matches[1];
+
+        return true;
+    });
+    $server->setTimeout(null);
+});
+
+afterAll(function () use ($server) {
+    $server->stop();
+});
+
+beforeEach(function () use (&$url) {
+    $this->url = $url;
     $this->targetPath = getTempPath('test.png');
 });
 
 it('can take a screenshot of a url', function () {
-    Screenshot::url('https://spatie.be')->save($this->targetPath);
+    Screenshot::url($this->url)->save($this->targetPath);
 
+    expect(file_get_contents($this->url))->toContain('<h1>Screenshot test page</h1>');
     expect($this->targetPath)->toBeFile();
     expect(mime_content_type($this->targetPath))->toBe('image/png');
 });
@@ -25,7 +49,7 @@ it('can take a screenshot of html', function () {
 it('can take a screenshot as jpeg', function () {
     $path = getTempPath('test.jpg');
 
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->quality(80)
         ->save($path);
 
@@ -34,16 +58,17 @@ it('can take a screenshot as jpeg', function () {
 });
 
 it('can take a full page screenshot', function () {
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->fullPage()
         ->save($this->targetPath);
 
     expect($this->targetPath)->toBeFile();
     expect(mime_content_type($this->targetPath))->toBe('image/png');
+    expect(getimagesize($this->targetPath)[1])->toBe(3600);
 });
 
 it('can take a screenshot with custom viewport', function () {
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->size(1920, 1080)
         ->save($this->targetPath);
 
@@ -51,7 +76,7 @@ it('can take a screenshot with custom viewport', function () {
 });
 
 it('can take a screenshot with device scale factor', function () {
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->width(800)
         ->height(600)
         ->deviceScaleFactor(1)
@@ -77,7 +102,7 @@ it('can take a screenshot with omitted background', function () {
 });
 
 it('can customize browsershot', function () {
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->withBrowsershot(function (Browsershot $browsershot) {
             $browsershot->userAgent('TestAgent/1.0');
         })
@@ -87,7 +112,7 @@ it('can customize browsershot', function () {
 });
 
 it('can get a base64 encoded screenshot', function () {
-    $base64 = Screenshot::url('https://spatie.be')->base64();
+    $base64 = Screenshot::url($this->url)->base64();
 
     expect($base64)->toBeString();
     expect(base64_decode($base64, true))->not->toBeFalse();
@@ -96,7 +121,7 @@ it('can get a base64 encoded screenshot', function () {
 it('can save a screenshot to a disk', function () {
     Storage::fake('local');
 
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->disk('local')
         ->save('screenshot.png');
 
@@ -104,11 +129,11 @@ it('can save a screenshot to a disk', function () {
 });
 
 it('will use a fresh instance after saving', function () {
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->width(1920)
         ->save(getTempPath('first.png'));
 
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->width(800)
         ->save(getTempPath('second.png'));
 
@@ -130,7 +155,7 @@ it('will execute javascript in html screenshots', function () {
 });
 
 it('can wait for a timeout before taking screenshot', function () {
-    Screenshot::url('https://spatie.be')
+    Screenshot::url($this->url)
         ->waitForTimeout(500)
         ->save($this->targetPath);
 
