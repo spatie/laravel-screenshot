@@ -5,6 +5,7 @@ use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\Facades\Screenshot;
 use Spatie\LaravelScreenshot\Jobs\GenerateScreenshotJob;
 use Spatie\LaravelScreenshot\QueuedScreenshotResponse;
+use Spatie\LaravelScreenshot\ScreenshotOptions;
 
 class CustomGenerateScreenshotJob extends GenerateScreenshotJob
 {
@@ -51,7 +52,7 @@ it('generates a screenshot when the job runs synchronously', function () {
     $job = new GenerateScreenshotJob(
         input: '<h1>Queued sync test</h1>',
         isHtml: true,
-        options: new \Spatie\LaravelScreenshot\ScreenshotOptions,
+        options: new ScreenshotOptions,
         path: $path,
     );
 

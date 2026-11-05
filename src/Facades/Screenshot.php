@@ -4,11 +4,12 @@ namespace Spatie\LaravelScreenshot\Facades;
 
 use Illuminate\Support\Facades\Facade;
 use Spatie\LaravelScreenshot\FakeScreenshotBuilder;
+use Spatie\LaravelScreenshot\ScreenshotBuilder;
 use Spatie\LaravelScreenshot\ScreenshotFactory;
 
 /**
- * @mixin \Spatie\LaravelScreenshot\ScreenshotBuilder
- * @mixin \Spatie\LaravelScreenshot\FakeScreenshotBuilder
+ * @mixin ScreenshotBuilder
+ * @mixin FakeScreenshotBuilder
  */
 class Screenshot extends Facade
 {
