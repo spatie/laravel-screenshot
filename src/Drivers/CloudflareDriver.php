@@ -3,6 +3,7 @@
 namespace Spatie\LaravelScreenshot\Drivers;
 
 use Illuminate\Support\Facades\Http;
+use Spatie\LaravelScreenshot\Enums\WaitUntil;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\ScreenshotOptions;
 
@@ -108,7 +109,7 @@ class CloudflareDriver implements ScreenshotDriver
 
         if ($options->waitUntil !== null) {
             $body['gotoOptions'] = [
-                'waitUntil' => $options->waitUntil instanceof \Spatie\LaravelScreenshot\Enums\WaitUntil
+                'waitUntil' => $options->waitUntil instanceof WaitUntil
                     ? $options->waitUntil->value
                     : $options->waitUntil,
             ];

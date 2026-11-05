@@ -4,6 +4,7 @@ namespace Spatie\LaravelScreenshot\Drivers;
 
 use Closure;
 use Spatie\Browsershot\Browsershot;
+use Spatie\LaravelScreenshot\Enums\WaitUntil;
 use Spatie\LaravelScreenshot\Exceptions\CouldNotTakeScreenshot;
 use Spatie\LaravelScreenshot\ScreenshotOptions;
 
@@ -84,7 +85,7 @@ class BrowsershotDriver implements ScreenshotDriver
         }
 
         if ($options->waitUntil !== null) {
-            $waitUntil = $options->waitUntil instanceof \Spatie\LaravelScreenshot\Enums\WaitUntil
+            $waitUntil = $options->waitUntil instanceof WaitUntil
                 ? $options->waitUntil->value
                 : $options->waitUntil;
 

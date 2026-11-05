@@ -1,5 +1,8 @@
 <?php
 
+use Spatie\LaravelScreenshot\Actions\DetermineImageType;
+use Spatie\LaravelScreenshot\Jobs\GenerateScreenshotJob;
+
 return [
     /*
      * The default driver to use for screenshot generation.
@@ -12,14 +15,14 @@ return [
      * You can replace this with your own class that extends GenerateScreenshotJob
      * to customize things like $tries, $timeout, $backoff, or default queue.
      */
-    'job' => Spatie\LaravelScreenshot\Jobs\GenerateScreenshotJob::class,
+    'job' => GenerateScreenshotJob::class,
 
     /*
      * The action class used to determine the image type from a file path.
      * The default implementation maps file extensions to ImageType enum values,
      * falling back to PNG for unknown extensions.
      */
-    'determine_image_type' => Spatie\LaravelScreenshot\Actions\DetermineImageType::class,
+    'determine_image_type' => DetermineImageType::class,
 
     /*
      * Default screenshot options.
