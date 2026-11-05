@@ -10,7 +10,7 @@ $url = '';
 
 beforeAll(function () use ($server, &$url) {
     $server->start();
-    $server->waitUntil(function ($type, $output) use (&$url) {
+    $ready = $server->waitUntil(function ($type, $output) use (&$url) {
         if (! preg_match('~Development Server \((http://127\.0\.0\.1:\d+)\) started~', $output, $matches)) {
             return false;
         }
@@ -19,6 +19,11 @@ beforeAll(function () use ($server, &$url) {
 
         return true;
     });
+
+    if (! $ready) {
+        throw new RuntimeException('Fixture HTTP server failed to start: '.$server->getErrorOutput());
+    }
+
     $server->setTimeout(null);
 });
 
